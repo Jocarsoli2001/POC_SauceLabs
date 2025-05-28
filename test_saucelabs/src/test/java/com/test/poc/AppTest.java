@@ -33,7 +33,7 @@ public class AppTest {
             case "android_native":
                 try {
                     capabilities.setCapability("platformName", "android");
-                    capabilities.setCapability("appium:app", "storage:filename=Android-MyDemoAppRN.1.3.0.build-244.apk");
+                    capabilities.setCapability("appium:app", "storage:filename=app-debug.apk");
                     capabilities.setCapability("appium:platformVersion", "12.*"); 
                     capabilities.setCapability("appium:deviceName", "Samsung.*");
                     capabilities.setCapability("appium:automationName", "uiautomator2");
@@ -89,10 +89,10 @@ public class AppTest {
         HashMap<String, Object> sauceOptions = new HashMap<String, Object>();
         // appiumVersion is mandatory to use Appium 2 on Sauce Labs
         sauceOptions.put("appiumVersion", "2.0.0");
-        if(os.equals("android_native") || os.equals("android_web")) {
+        if(os.equals("android_native")) {
             // Android-specific Sauce Labs options
             sauceOptions.put("build", "244");
-        } else if(os.equals("ios_native") || os.equals("ios_web")) {
+        } else if(os.equals("ios_native")) {
             // iOS-specific Sauce Labs options
             sauceOptions.put("build", "162");
         }
@@ -146,10 +146,12 @@ public class AppTest {
         if(os.equals("android_native")) {
             // Android-specific test commands
             try {
-                WebElement element = driver.findElement(By.xpath("(//android.view.ViewGroup[@content-desc=\"store item\"])[1]/android.view.ViewGroup[1]/android.widget.ImageView"));
-                element.click();
-                WebElement element2 = driver.findElement(By.xpath("//android.view.ViewGroup[@content-desc=\"open menu\"]/android.widget.ImageView"));
-                element2.click();
+                WebElement user = driver.findElement(By.xpath("//android.widget.EditText[@resource-id=\"ion-input-0\"]"));
+                user.sendKeys("9990003136");
+                WebElement pass = driver.findElement(By.xpath("//android.widget.EditText[@resource-id=\"ion-input-1\"]"));
+                pass.sendKeys("Arg5561@@@");
+                WebElement loginButton = driver.findElement(By.xpath("//android.widget.Button[@text=\"Ingresar\"]"));
+                loginButton.click();
                 driver.executeScript("sauce:job-result=passed");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -169,6 +171,26 @@ public class AppTest {
                 element3.click();
                 WebElement element4 = iosDriver.findElement(By.xpath("//XCUIElementTypeOther[@name=\"navigation back button\"]"));
                 element4.click();
+                iosDriver.executeScript("sauce:job-result=passed");
+            } catch (Exception e) {
+                e.printStackTrace();
+                iosDriver.executeScript("sauce:job-result=failed");
+            }
+        } else if(os.equals("android_web")) {
+            // Android Web-specific test commands
+            try {
+                WebElement searchBox = driver.findElement(By.xpath(""));
+                driver.executeScript("sauce:job-result=passed");
+            } catch (Exception e) {
+                e.printStackTrace();
+                driver.executeScript("sauce:job-result=failed");
+            }
+        } else if(os.equals("ios_web")) {
+            // iOS Web-specific test commands
+            try {
+                WebElement searchBox = iosDriver.findElement(By.xpath("//XCUIElementTypeSearchField[@name=\"Search\"]"));
+                searchBox.sendKeys("Sauce Labs");
+                searchBox.submit();
                 iosDriver.executeScript("sauce:job-result=passed");
             } catch (Exception e) {
                 e.printStackTrace();
